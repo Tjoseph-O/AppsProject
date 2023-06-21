@@ -7,18 +7,22 @@ public class Bank {
     private List<Account> accounts = new ArrayList<>();
     
     
-    public void openAccount(String password) {
+    public String openAccount(String firstName,String lastName, String password) {
         String accountNumber = "112233" + accounts.size();
         Account account = new Account(password);
         account.setAccount(accountNumber);
         accounts.add(account);
+        return accountNumber;
     }
     public int getSizeOfAccounts() {
         return accounts.size();
     }
-    public void depositToAccount(String accountNumber, int amount) {
+    public String depositToAccount(String accountNumber, int amount) {
         Account account = findAccountNumber(accountNumber);
-        account.deposit(amount);
+        if (amount > 1) {
+            account.deposit(amount);
+        }else System.out.println("Minimum Deposit Is #2");
+        return accountNumber;
     }
 
     private Account findAccountNumber(String accountNumber) {
@@ -40,8 +44,10 @@ public class Bank {
         
         Account sender = findAccountNumber(sendersAccountNumber);
         Account  receiver = findAccountNumber(receiverAccountNumber);
-        sender.withdraw(amount, password);
-        receiver.deposit(amount);
+        if (amount <= sender.checkBalance(password)) {
+            sender.withdraw(amount, password);
+            receiver.deposit(amount);
+        }else System.out.println("insufficient balance");
     }
 
     public void withdraw(String accountNumber, String password, int amount) {
